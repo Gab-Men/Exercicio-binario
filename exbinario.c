@@ -38,7 +38,7 @@ void bi_de(){
     int decimal = 0;
     int tamanho = 0;
 
-    printf("Digite um número binário(limite de 16 bits ou seja um limite de numeros de 16 entre 0 e 1): ");
+    printf("Digite um número binário(limite de 16 bits ou seja um limite de numeros de 16, entre 0 e 1): ");
     fgets(binario, sizeof(binario), stdin);
 
     tamanho = strlen(binario);
@@ -57,7 +57,7 @@ void bi_de(){
     }
     
     printf("Decimal: %d\n", decimal);
-
+    printf("\n");
     return 0;
 }
 
@@ -66,7 +66,7 @@ void bi_octal() {
     char binario[16]; 
     int len, i, j, valor;
 
-    printf("Digite um número binário (até 15 bits): ");
+    printf("Digite um número binário(limite de 15 bits ou seja um limite de numeros de 15, entre 0 e 1): ");
     fgets(binario, sizeof(binario), stdin);
 
     len = strlen(binario);
@@ -102,6 +102,7 @@ void bi_octal() {
     }
 
     printf("\n");
+    return 0;
 }
 
 void octal_bi(){
@@ -134,9 +135,118 @@ void octal_bi(){
         }
     }
     printf("\n");
+    return 0;
+}
+
+void bi_hexa(){
+    char binario[21];
+
+    printf("Digite um número binário(limite de 20 bits ou seja um limite de numeros de 20, entre 0 e 1): ");
+    fgets(binario, sizeof(binario), stdin);
+
+    size_t len = strlen(binario);
+    if (binario[len - 1] == '\n') {
+        binario[len -1] = '\0';
+    }
+    
+    printf("Binário digitado: \n ");
+
+    for(int i = 0; i < 21; i++){
+        printf("%c",binario[i]);
+    }
+
+
+    for (int i = 0; i < binario[i]; i++){
+        switch (binario[i]){
+            case '0': printf("0000"); break;
+            case '1': printf("0001"); break;
+            case '2': printf("0010"); break;
+            case '3': printf("0011"); break;
+            case '4': printf("0100"); break;
+            case '5': printf("0101"); break;
+            case '6': printf("0110"); break;
+            case '7': printf("0111"); break;
+            case '8': printf("1000"); break;
+            case '9': printf("1001"); break;
+            case 'A': printf("1010"); break;
+            case 'B': printf("1011"); break;
+            case 'C': printf("1100"); break;
+            case 'D': printf("1101"); break;
+            case 'E': printf("1110"); break;
+            case 'F': printf("1111"); break;
+        
+            default:
+            printf("\n Caractere inválido: %c\n", binario[i]);
+            return;
+        }
+    }
+    printf("\n");
+    return 0;
 }
 
 
+void de_hexa(){
+    int decimal = 0, i =0, de = 0 resto = 0;
+    char hexa[21];
 
+    printf("Digite um numero decimal para converter em hexadecimal(lembrando que o limite de numeros é de 20): \n");
+    scanf("%d", &decimal);
+
+    de = decimal;
+
+    while(decimal > 0){
+        resto = decimal % 16;
+
+        if(resto < 10){
+            hexa[i] = resto + '0';
+        } else{
+            hexa[i] = resto - 10 + 'A';
+        }
+
+        decimal = decimal / 16;
+        i++;
+    }
+    
+    printf("O numero que voce digitou em decimal é: %d\n Ja o numero convertido para hexadecimal é: ", de);
+    for(int j = i; j < 1; j--){
+        printf("%c", hexa[j]);
+    }
+    printf("\n");
+    return 0;
+}
+
+void ascii_de() {
+    char texto[100];
+
+    printf("Digite uma palavra ou frase: ");
+    fgets(texto, sizeof(texto), stdin);
+
+    // Remover o '\n' do final se existir
+    size_t len = strlen(texto);
+    if (texto[len - 1] == '\n') {
+        texto[len - 1] = '\0';
+        len--;
+    }
+
+    printf("Valores ASCII decimais:\n");
+    for (int i = 0; texto[i] != '\0'; i++) {
+        printf("'%c' = %d\n", texto[i], (int)texto[i]);
+    }
+}
+/*/Atividades
+
+Decimal para binário
+Binário para decimal
+
+Binário para octal
+Decimal para octal
+
+Binário para hexadecimal 
+Decimal para hexadecimal 
+
+Pesquisar tabela ASCII 
+
+Quando escrever uma palavra ou frase, o valor deve ser convertido para o seu valor decimal correspondente da tabela ASCII
+/*/
 
 
