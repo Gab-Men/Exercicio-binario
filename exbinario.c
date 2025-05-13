@@ -1,72 +1,106 @@
 #include <stdio.h>
-#include <math.h>
 #include <string.h>
-int main() {
+#include <stdbool.h>
 
+// Prototipação das funções
+void De_bi();
+void bi_de();
+void bi_octal();
+void de_octal();
+void bi_hexa();
+void de_hexa();
+void ascii_de();
+
+int main() {
+    int n;
+    bool parar = false;
+
+    while (!parar) {
+        printf("\n===== Calculadora Multibase =====\n");
+        printf("0 - Parar o programa.\n");
+        printf("1 - Decimal para binário\n");
+        printf("2 - Binário para decimal\n");
+        printf("3 - Binário para octal\n");
+        printf("4 - Decimal para octal\n");
+        printf("5 - Binário para hexadecimal\n");
+        printf("6 - Decimal para hexadecimal\n");
+        printf("7 - Texto para códigos ASCII decimais\n");
+        printf("Escolha uma opção: ");
+        scanf("%d", &n);
+        getchar(); 
+
+        switch (n) {
+            case 0: parar = true; break;
+            case 1: De_bi(); break;
+            case 2: bi_de(); break;
+            case 3: bi_octal(); break;
+            case 4: de_octal(); break;
+            case 5: bi_hexa(); break;
+            case 6: de_hexa(); break;
+            case 7: ascii_de(); break;
+            default: printf("Opção inválida!\n");
+        }
+    }
 }
 
-void De_bi(){
+// Decimal para binário
+void De_bi() {
     int decimal, binario[16];
     int i = 0;
 
-    printf("Digite um número decimal(limite de 16 bits ou seja entre -32.768 e 32.767): ");
+    printf("Digite um número decimal (até 32767): ");
     scanf("%d", &decimal);
+    getchar();
 
     if (decimal == 0) {
         printf("Binário: 0\n");
-        return 0;
+        return;
     }
 
     while (decimal > 0) {
-        binario[i] = decimal % 2;
-        decimal = decimal / 2;
-        i++;
+        binario[i++] = decimal % 2;
+        decimal /= 2;
     }
 
     printf("Binário: ");
     for (int j = i - 1; j >= 0; j--) {
         printf("%d", binario[j]);
     }
-
     printf("\n");
-
-    return 0;
 }
 
-void bi_de(){
-    char binario[16];
+// Binário para decimal
+void bi_de() {
+    char binario[17];
     int decimal = 0;
-    int tamanho = 0;
 
-    printf("Digite um número binário(limite de 16 bits ou seja um limite de numeros de 16, entre 0 e 1): ");
+    printf("Digite um número binário (até 16 bits): ");
     fgets(binario, sizeof(binario), stdin);
 
-    tamanho = strlen(binario);
-    if (binario[tamanho - 1] == '\n') {
-        binario[tamanho - 1] = '\0';
-        tamanho--;
+    size_t len = strlen(binario);
+    if (binario[len - 1] == '\n') {
+        binario[len - 1] = '\0';
+        len--;
     }
-    
-    for (int i = 0; i < tamanho; i++){
-        if (binario[i] == '1' || binario[i] == '0'){
+
+    for (int i = 0; i < len; i++) {
+        if (binario[i] == '0' || binario[i] == '1') {
             decimal = decimal * 2 + (binario[i] - '0');
         } else {
-            printf("Entrada inválida. Por favor, digite apenas 0 ou 1: %c\n"), binario[i];
-            return 1;
+            printf("Caractere inválido: %c\n", binario[i]);
+            return;
         }
     }
-    
+
     printf("Decimal: %d\n", decimal);
-    printf("\n");
-    return 0;
 }
 
-
+// Binário para octal
 void bi_octal() {
-    char binario[16]; 
+    char binario[17], binario_completo[20] = "";
     int len, i, j, valor;
 
-    printf("Digite um número binário(limite de 15 bits ou seja um limite de numeros de 15, entre 0 e 1): ");
+    printf("Digite um número binário (até 15 bits): ");
     fgets(binario, sizeof(binario), stdin);
 
     len = strlen(binario);
@@ -77,13 +111,12 @@ void bi_octal() {
 
     for (i = 0; i < len; i++) {
         if (binario[i] != '0' && binario[i] != '1') {
-            printf("Entrada inválida. Apenas 0 e 1 são permitidos.\n");
+            printf("Entrada inválida.\n");
             return;
         }
     }
 
     int padding = (3 - (len % 3)) % 3;
-    char binario_completo[20] = "";
     for (i = 0; i < padding; i++) {
         strcat(binario_completo, "0");
     }
@@ -95,137 +128,121 @@ void bi_octal() {
         valor = 0;
         for (j = 0; j < 3; j++) {
             if (binario_completo[i + j] == '1') {
-                valor += 1 << (2 - j); 
+                valor += 1 << (2 - j);
             }
         }
         printf("%d", valor);
     }
-
     printf("\n");
-    return 0;
 }
 
-void octal_bi(){
+// Decimal para octal
+void de_octal() {
+    int num, i = 0;
     char octal[20];
 
-    printf("Digite um numero em octal lembrando que octal é a juncao de 3 bits (até 18 bits) ou seja 6 combinacoes: ");
-    fgets(octal, sizeof(octal), stdin);
+    printf("Digite um número decimal (até 32767): ");
+    scanf("%d", &num);
+    getchar();
 
-    size_t len = strlen(octal);
-    if (octal[len - 1] == '\n') {
-        octal[len -1] = '\0';
+    if (num == 0) {
+        printf("Octal: 0\n");
+        return;
     }
-    
-    printf("Binário  ");
 
-    for (int i = 0; i < octal[i]; i++){
-        switch (octal[i]){
-            case '0': printf("000"); break;
-            case '1': printf("001"); break;
-            case '2': printf("010"); break;
-            case '3': printf("011"); break;
-            case '4': printf("100"); break;
-            case '5': printf("101"); break;
-            case '6': printf("110"); break;
-            case '7': printf("111"); break;
-        
-            default:
-            printf("\n Caractere inválido: %c\n", octal[i]);
-            return;
-        }
+    while (num > 0) {
+        octal[i++] = (num % 8) + '0';
+        num /= 8;
+    }
+
+    printf("Octal: ");
+    for (int j = i - 1; j >= 0; j--) {
+        printf("%c", octal[j]);
     }
     printf("\n");
-    return 0;
 }
 
-void bi_hexa(){
-    char binario[21];
+// Binário para hexadecimal
+void bi_hexa() {
+    char binario[21], binario_completo[25] = "";
+    int len, i, j, valor;
 
-    printf("Digite um número binário(limite de 20 bits ou seja um limite de numeros de 20, entre 0 e 1): ");
+    printf("Digite um número binário (até 20 bits): ");
     fgets(binario, sizeof(binario), stdin);
 
-    size_t len = strlen(binario);
+    len = strlen(binario);
     if (binario[len - 1] == '\n') {
-        binario[len -1] = '\0';
-    }
-    
-    printf("Binário digitado: \n ");
-
-    for(int i = 0; i < 21; i++){
-        printf("%c",binario[i]);
+        binario[len - 1] = '\0';
+        len--;
     }
 
-
-    for (int i = 0; i < binario[i]; i++){
-        switch (binario[i]){
-            case '0': printf("0000"); break;
-            case '1': printf("0001"); break;
-            case '2': printf("0010"); break;
-            case '3': printf("0011"); break;
-            case '4': printf("0100"); break;
-            case '5': printf("0101"); break;
-            case '6': printf("0110"); break;
-            case '7': printf("0111"); break;
-            case '8': printf("1000"); break;
-            case '9': printf("1001"); break;
-            case 'A': printf("1010"); break;
-            case 'B': printf("1011"); break;
-            case 'C': printf("1100"); break;
-            case 'D': printf("1101"); break;
-            case 'E': printf("1110"); break;
-            case 'F': printf("1111"); break;
-        
-            default:
-            printf("\n Caractere inválido: %c\n", binario[i]);
+    for (i = 0; i < len; i++) {
+        if (binario[i] != '0' && binario[i] != '1') {
+            printf("Entrada inválida.\n");
             return;
         }
     }
+
+    int padding = (4 - (len % 4)) % 4;
+    for (i = 0; i < padding; i++) {
+        strcat(binario_completo, "0");
+    }
+    strcat(binario_completo, binario);
+    len = strlen(binario_completo);
+
+    printf("Hexadecimal: ");
+    for (i = 0; i < len; i += 4) {
+        valor = 0;
+        for (j = 0; j < 4; j++) {
+            if (binario_completo[i + j] == '1') {
+                valor += 1 << (3 - j);
+            }
+        }
+        if (valor < 10)
+            printf("%d", valor);
+        else
+            printf("%c", 'A' + (valor - 10));
+    }
     printf("\n");
-    return 0;
 }
 
+// Decimal para hexadecimal
+void de_hexa() {
+    int decimal, resto, i = 0;
+    char hexa[20];
 
-void de_hexa(){
-    int decimal = 0, i =0, de = 0 resto = 0;
-    char hexa[21];
-
-    printf("Digite um numero decimal para converter em hexadecimal(lembrando que o limite de numeros é de 20): \n");
+    printf("Digite um número decimal (até 32767): ");
     scanf("%d", &decimal);
+    getchar();
 
-    de = decimal;
-
-    while(decimal > 0){
-        resto = decimal % 16;
-
-        if(resto < 10){
-            hexa[i] = resto + '0';
-        } else{
-            hexa[i] = resto - 10 + 'A';
-        }
-
-        decimal = decimal / 16;
-        i++;
+    if (decimal == 0) {
+        printf("Hexadecimal: 0\n");
+        return;
     }
-    
-    printf("O numero que voce digitou em decimal é: %d\n Ja o numero convertido para hexadecimal é: ", de);
-    for(int j = i; j < 1; j--){
+
+    while (decimal > 0) {
+        resto = decimal % 16;
+        hexa[i++] = (resto < 10) ? resto + '0' : resto - 10 + 'A';
+        decimal /= 16;
+    }
+
+    printf("Hexadecimal: ");
+    for (int j = i - 1; j >= 0; j--) {
         printf("%c", hexa[j]);
     }
     printf("\n");
-    return 0;
 }
 
+// Texto para ASCII decimal
 void ascii_de() {
-    char texto[100];
+    char texto[500];
 
     printf("Digite uma palavra ou frase: ");
     fgets(texto, sizeof(texto), stdin);
 
-    // Remover o '\n' do final se existir
     size_t len = strlen(texto);
     if (texto[len - 1] == '\n') {
         texto[len - 1] = '\0';
-        len--;
     }
 
     printf("Valores ASCII decimais:\n");
@@ -233,20 +250,3 @@ void ascii_de() {
         printf("'%c' = %d\n", texto[i], (int)texto[i]);
     }
 }
-/*/Atividades
-
-Decimal para binário
-Binário para decimal
-
-Binário para octal
-Decimal para octal
-
-Binário para hexadecimal 
-Decimal para hexadecimal 
-
-Pesquisar tabela ASCII 
-
-Quando escrever uma palavra ou frase, o valor deve ser convertido para o seu valor decimal correspondente da tabela ASCII
-/*/
-
-
